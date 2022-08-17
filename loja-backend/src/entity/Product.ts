@@ -1,9 +1,9 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Brand } from "./Brand";
 import { Category } from "./Category";
-@Entity()
 
-export class Product {
+@Entity()
+export class Product extends BaseEntity{
 
     @PrimaryGeneratedColumn()
     id: number;
@@ -27,8 +27,9 @@ export class Product {
     brand: Brand;
 
     @CreateDateColumn()
-    createdAT: Date;
+    createAt: Date;
 
     @UpdateDateColumn()
-    updatedAT: Date;
+    updatedAt: Date;
+    
 }
