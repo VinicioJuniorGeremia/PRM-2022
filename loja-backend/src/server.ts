@@ -1,9 +1,10 @@
 import { AppDataSource } from './data-source';
 import express from 'express';
 import cors from 'cors';
+import routes from './routes';
 
-//instancio uma aplicação express
-const app = express(); 
+//Instancio uma aplicação express
+const app = express();
 
 //Determina a porta de execução
 const PORT = 3300;
@@ -12,12 +13,19 @@ const PORT = 3300;
 app.use(cors());
 app.use(express.json());
 
+app.use('/server', routes);
+
+//Tento conectar ao banco e, se não conseguir, mostro o erro.
 AppDataSource.initialize()
     .then(() => {
 
-
+        //Inicio a aplicação
         app.listen(PORT, () => {
-            console.log(`Ops ocorreu um erro.`);
-            console.error(console.error());
+            console.log(`Running in port ${PORT}`);
         })
+
+    })
+    .catch(error => {
+        console.log('Ops! Ocorreu um erro.');
+        console.error(error);
     });

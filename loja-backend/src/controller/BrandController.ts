@@ -80,9 +80,14 @@ class BrandController {
                 return response.status(400).json({message: 'Recurso não encontrado'})
             }
             //Atualizo com os novos dados
-            const brand = await Brand.update(id, request.body)
-        
-            return response.json(brand);
+            await Brand.update(id, request.body);
+
+            const novo = request.body;
+
+            //altero o id para o que veio no request
+            novo.id = found.id;
+
+            return response.json(novo);
         } catch (e) {
             const error = e as TypeORMError;
             return response.status(500).json({message: error.message});
