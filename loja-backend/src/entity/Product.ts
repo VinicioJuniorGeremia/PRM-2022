@@ -3,9 +3,9 @@ import { Brand } from "./Brand";
 import { Category } from "./Category";
 
 @Entity()
-export class Product extends BaseEntity{
+export class Product extends BaseEntity {
 
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn() 
     id: number;
 
     @Column({nullable: false, length: 50})
@@ -27,9 +27,8 @@ export class Product extends BaseEntity{
     brand: Brand;
 
     @CreateDateColumn()
-    createAt: Date;
-
+    createdAt: Date;
+    
     @UpdateDateColumn()
     updatedAt: Date;
-    
 }
