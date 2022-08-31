@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-//import routes from './routes';
+import routes from './routes';
 
 //Carrego as variaveis de ambiente da aplicação
 dotenv.config();
@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3302;
 app.use(cors());
 app.use(express.json());
 
-//app.use('/server', routes);
+app.use('/server', routes);
 
 
 //Inicio a aplicação
