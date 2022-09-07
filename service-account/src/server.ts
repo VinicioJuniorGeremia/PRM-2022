@@ -16,10 +16,11 @@ const PORT = process.env.PORT || 3302;
 app.use(cors());
 app.use(express.json());
 
-app.use('/server', routes);
+//Importa as rotas
+app.use('/account', routes);
 
 
 //Inicio a aplicação
 app.listen(PORT, () => {
-    console.log(`Service account in port ${PORT}`);
- });
+    console.log(`Service Account in port ${PORT}`);
+});

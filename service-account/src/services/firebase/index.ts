@@ -1,12 +1,10 @@
 import dotenv from 'dotenv';
 import { initializeApp, FirebaseError } from "firebase/app";
-import {getAuth, signInWithEmailAndPassword} from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 
+//Carregar variaveis de ambiente
 dotenv.config();
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.APIKEY,
   authDomain: process.env.AUTHDOMAIN,
@@ -19,7 +17,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-//Autenticação
-const sigInAdmin = (email: string, password: string) => (signInWithEmailAndPassword(getAuth(), email, password));
+//Atutenticação
+const signInAdmin = (email: string, password: string) => (signInWithEmailAndPassword(getAuth(), email, password));
 
-export {FirebaseError, sigInAdmin}
+export {FirebaseError, signInAdmin}
