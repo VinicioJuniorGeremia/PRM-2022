@@ -1,13 +1,12 @@
-
+import { ICredential } from '@typesCustom';
 import axios, { AxiosError } from "axios";
-import { ICredential } from "@typesCustom";
 
 
 const api = axios.create({
-    baseURL:'http://localhost:3300'
-})
+    baseURL: 'http://localhost:3300'
+});
 
-//Endpoint dos servicos
+//Endpoint dos serviços
 const _ACCOUNT = '/account/admin';
 
 
@@ -17,18 +16,17 @@ const signInAdmin = async (credential: ICredential) => {
         const result = await api.post(`${_ACCOUNT}/signin`, credential);
 
         return new Promise(resolve => {
-            resolve(result.data)
-        })
+            resolve(result.data);
+        });
 
     } catch (e) {
         const error = e as AxiosError;
-
-        return new Promise((resolve,reject) => {
-            reject(error.response?.data)
-        })
         
-    }
+        return new Promise((resolve,reject) => {
+            reject(error.response?.data);
+        });
 
+    }
 }
 
-export {signInAdmin}
+export { signInAdmin }

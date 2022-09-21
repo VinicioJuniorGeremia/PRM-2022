@@ -1,50 +1,52 @@
+import {ICredential} from '@typesCustom';
 import { PrimaryButton, Stack, TextField } from "@fluentui/react";
-import {ICredential} from "@typesCustom";
-import {useState, FormEvent} from "react";
-import { useAuth } from "../../hook/useAuth";
-import { signInAdmin } from "../../services/server";
+import { FormEvent, useState } from "react";
+import { signInAdmin } from '../../services/server';
+import { useAuth } from '../../hook/useAuth';
 
-export function LoginPage(){
+export function LoginPage() {
 
-    const { signIn } = useAuth();
+    const { user, signIn } = useAuth();
 
     const [credential, setCredential] = useState<ICredential>({
         email: '',
         password: ''
-    })
+    });
 
-    async function handleSignIn(event: FormEvent){
+    async function handleSignIn(event: FormEvent) {
         event.preventDefault();
-
-        await signInAdmin(credential)
-
-        console.log(credential);
+        
+        try {
+            await signIn(credential);
+        } catch(e) {
+            console.log('Deu pau: ', e)
+        }
     }
 
     return (
         <div id="login-page">
             <Stack horizontal={false}>
                 <form onSubmit={handleSignIn}>
-                    <TextField label="Email"
-                    required
-                    value={credential.email}
-                    onChange={event => setCredential({...credential, email:(event.target as HTMLInputElement).value})} />
+                    <TextField label="E-mail"
+                        required
+                        value={credential.email}
+                        onChange={event => setCredential({...credential, email: (event.target as HTMLInputElement).value})} />
 
-                    <TextField label="senha"
-                    required
-                    type="password"
-                    value={credential.password}
-                    onChange={event => setCredential({...credential, password:(event.target as HTMLInputElement).value})}
-                    />
+                    <TextField label="Senha"
+                        required
+                        type="password"
+                        value={credential.password}
+                        onChange={event => setCredential({...credential, password: (event.target as HTMLInputElement).value})} />
 
                     <PrimaryButton
-                       type="submit">
-                       <span>Entrar</span>
+                        type="submit">
+                        <span>Entrar</span>
                     </PrimaryButton>
-                       
+                        
                 </form>
 
-                <h2> # </h2>
+                <h2> # {JSON.stringify(user)} # </h2>
+
             </Stack>
         </div>
     )
