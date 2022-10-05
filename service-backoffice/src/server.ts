@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json());
 
 //Importa as rotas
-app.use('/service-backoffice', routes);
+app.use('/backoffice', routes);
 
 //Tento conectar ao banco e, se não conseguir, mostro o erro.
 AppDataSource.initialize()
