@@ -1,25 +1,26 @@
-import { Customer } from './Customer';
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Customer } from "./Customer";
 
 @Entity()
 export class Order extends BaseEntity {
-
     @PrimaryGeneratedColumn() 
     id: number;
 
-    @Column({nullable: false, length: 50})
+    @ManyToMany(() => Customer, {eager: true, nullable: false})
     customer: Customer;
 
-    @CreateDateColumn({nullable: false})
+    @Column({nullable: false})
     orderDate: Date;
 
-    @CreateDateColumn()
+    @Column({nullable: true})
     invoicedDate: Date;
 
-    @CreateDateColumn()
+    @Column({nullable: true})
     canceledDate: Date;
 
-    @ManyToOne(() => Customer, {eager: true, nullable: false})
-    Customer: Customer;
+    @CreateDateColumn()
+    createdAt: Date;
     
+    @UpdateDateColumn()
+    updatedAt: Date;
 }

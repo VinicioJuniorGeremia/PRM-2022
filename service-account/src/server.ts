@@ -22,5 +22,5 @@ app.use('/account', routes);
 
 //Inicio a aplicação
 app.listen(PORT, () => {
-    console.log(`Service Account in port ${PORT}`);
+    console.log(`Service Account running in port ${PORT}`);
 });

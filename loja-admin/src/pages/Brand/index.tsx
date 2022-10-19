@@ -1,102 +1,125 @@
-import { ColumnActionsMode, IColumn, Panel, PanelType, SelectionMode, ShimmeredDetailsList, Stack } from "@fluentui/react";
-import { IBrand } from "@typesCustom";
-import { useEffect, useState } from "react";
-import { MessageBarCustom } from "../../components/MessageBarCustom";
+import { ColumnActionsMode, DefaultButton, IColumn, Panel, PanelType, PrimaryButton, SelectionMode, ShimmeredDetailsList, Stack, TextField } from "@fluentui/react";
+import { useCallback, useEffect, useState } from "react";
 import { PageToolBar } from "../../components/PageToolBar";
-import { listBrands } from "../../services/server";
-
+import { IBrand } from '@typesCustom'
+import { createBrand, listBrands } from "../../services/server";
+import { MessageBarCustom } from "../../components/MessageBarCustom";
+import React from "react";
+import { PanelFooterContent } from "../../components/PanelFooterContent";
 
 export function BrandPage() {
-
-    //Entities
-    const [brand, SetBrand ] = useState<IBrand>({} as IBrand)
-    const [brands, SetBrands ] = useState<IBrand[]>([])
-
-    //State - messages
-    const [ messageError, setMessageError] = useState('');
-    const [ messageSucces, setMessageSucces] = useState('');
-
-    //State loading
-
+    const [brand, setBrand] = useState<IBrand>({} as IBrand)
+    const [brands, setBrands] = useState<IBrand[]>([]);
     const [loading, setLoading] = useState(true);
+    // const [message, setMessage] = useState('');
+    const [messageError, setMessageError] = useState('');
+    const [messageSuccess, setMessageSuccess] = useState('');
+    const [openPanel, setOpenPanel] = useState(false);
 
-    //Colunas
-    const coluns: IColumn[] = [
+    const columns: IColumn[] = [
         {
             key: 'name',
-            name: 'Nome da Marca',
+            name: 'Nome da marca',
             fieldName: 'name',
             minWidth: 100,
             isResizable: false,
             columnActionsMode: ColumnActionsMode.disabled
         }
-    ]
+    ];
 
-    useEffect(()=> {
+    function handleNew() {
+        setOpenPanel(true);
+        setBrand({
+            name: ''
+        })
+    }
 
+    async function handleConfirmSave() {
+        createBrand(brand)
+            .then(result => {
+                console.log(result);
+                setBrands([...brands, result.data]);
+            }).catch(error => {
+                setMessageError(error.message);
+                setInterval(() => {
+                    handleDemissMessageBar();
+                    console.log('ok')
+                }, 10000)
+            }).finally(() =>
+                setOpenPanel(false))
+
+
+    }
+
+
+    const onRenderFooterContent = (): JSX.Element => (
+        <PanelFooterContent id={brand.id as number}
+            loading={loading} onConfirm={handleConfirmSave}
+            onDismiss={() => setOpenPanel(false)}></PanelFooterContent>
+
+    );
+
+    useEffect(() => {
         listBrands()
             .then(result => {
-                SetBrands{result.data}
+                if (result) {
+                    setBrands(result.data);
+                }
             })
             .catch(error => {
-                console.log('Deu pau', error.message)
-                setInterval(() =>{
+                setMessageError(error.message);
+                setInterval(() => {
                     handleDemissMessageBar();
-                }, 10000);
+                    console.log('ok')
+                }, 10000)
             })
-            .finally(() => setLoading(false))
-
+            .finally(() => {
+                setLoading(false)
+            })
     }, [])
 
     function handleDemissMessageBar() {
-        setMessageError('');
-        setMessageSucces('');
+        setMessageError('')
     }
 
-    function handleNew() {
-
-
+    function handleDemissPanel() {
+        setOpenPanel(false);
     }
 
-    return(
-        <div id="brand-page" className="main-containt">
+    return (
+        <div id="brand-page" className="main-content">
             <Stack horizontal={false}>
                 <PageToolBar
-                    currentPageTitle="Marcos"
+                    currentPageTitle={"Marcas"}
                     loading={loading}
-                    onNew={ handleNew }/>
-
+                    onNew={handleNew} />
                 <MessageBarCustom
                     messageError={messageError}
-                    messageSuccess={messageSucces}
-                    onDismiss={handleDemissMessageBar} />
-
+                    messageSuccess={messageSuccess}
+                    onDismiss={handleDemissMessageBar}
+                ></MessageBarCustom>
                 <div className="data-list">
                     <ShimmeredDetailsList
                         items={brands}
-                        columns={coluns}
+                        columns={columns}
                         setKey="set"
                         enableShimmer={loading}
                         selectionMode={SelectionMode.none} />
                 </div>
             </Stack>
-
-            <Panel>
-                className="panel-form"
-                isOpen={}
+            <Panel className="panel-form"
+                isOpen={openPanel}
                 type={PanelType.medium}
                 headerText="Cadastro de Marca"
                 isFooterAtBottom={true}
-                onDemiss
-                <p>Preencha Todos os campos obrigatórios identificados por <span className="required"<*>/span></p>
-
-                <Stack horizontal={false} className="panel-form-content>
-                    <TextField
-                        label="Nome da Marca"
-                        required
-                        value={brand.name}
-                        onChange={event => SetBrand({...brand, name: {event.target as }})}
+                onDismiss={handleDemissPanel}
+                onRenderFooterContent={onRenderFooterContent}>
+                <p>Preencha TODOS os campos obrigatórios identificados por <span className="required">*</span></p>
+                <Stack horizontal={false}
+                    className="panel-form-content">
+                    <TextField label="Nome da marca" required value={brand.name} onChange={event => setBrand({ ...brand, name: (event.target as HTMLInputElement).value })} />
                 </Stack>
+                {JSON.stringify(brand)}
             </Panel>
         </div>
     )

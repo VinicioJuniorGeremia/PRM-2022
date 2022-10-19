@@ -1,4 +1,3 @@
-
 import { IUser } from '@typesCustom';
 import {FirebaseError, signInAdmin} from '../services/firebase'
 
@@ -16,30 +15,32 @@ class AuthController {
             const user: IUser = {
                 uid: result.user.uid,
                 name: result.user.displayName || '',
-                email: result.user.email || credential.email 
+                email: result.user.email || credential.email
             }
 
-            const accesToken = await result.user.getIdToken();
+            const accessToken = await result.user.getIdToken();
 
-            return response.json({user: user, token: accesToken})
+            return response.json({user: user, token: accessToken})
 
         } catch (e) {
             const error = e as FirebaseError;
 
             //Bad request
             if (error.code === 'auth/missing-email') {
-                return response.status(400).json({message: 'É preciso informar um e-mail'});
+                return response.status(400).json({message: 'É preciso informar um e-mail.'});
             }
-            
+
+            //User not found
             if (error.code === 'auth/user-not-found') {
                 return response.status(401).json({message: 'Usuário não encontrado'});
             }
 
+            //Password wrong
             if (error.code === 'auth/wrong-password') {
                 return response.status(401).json({message: 'A senha está incorreta'});
             }
 
-            response.status(500).json(error.message)
+            return response.status(500).json({message: error.message})
         }
     }
 

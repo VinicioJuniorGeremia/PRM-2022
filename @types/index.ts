@@ -11,6 +11,6 @@ export interface IUser {
 }
 
 export interface IBrand {
-    id: number;
+    id?: number;
     name: string;
 }
