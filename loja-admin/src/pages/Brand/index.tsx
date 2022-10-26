@@ -6,6 +6,7 @@ import { createBrand, listBrands } from "../../services/server";
 import { MessageBarCustom } from "../../components/MessageBarCustom";
 import React from "react";
 import { PanelFooterContent } from "../../components/PanelFooterContent";
+import { DetailsListOptions } from "../../components/DetailsListOptions";
 
 export function BrandPage() {
     const [brand, setBrand] = useState<IBrand>({} as IBrand)
@@ -23,7 +24,11 @@ export function BrandPage() {
             fieldName: 'name',
             minWidth: 100,
             isResizable: false,
-            columnActionsMode: ColumnActionsMode.disabled
+            columnActionsMode: ColumnActionsMode.disabled,
+            onRender: (item: IBrand) => (
+                <DetailsListOptions
+                onEdit={() => hand.Edit }
+            )
         }
     ];
 
